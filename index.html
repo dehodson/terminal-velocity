@@ -114,13 +114,21 @@
 			background-size: 100%;
 		}
 	</style>
+	<title>Terminal Velocity</title>
 </head>
+<html>
 	<body>
 		<div id="main-container">
-			<textarea id="textbox" onkeydown="typing(event)">testicles</textarea>
+
+<textarea id="textbox" onkeydown="typing(event)">//type code in this box
+//lines beginning with a double 
+//slash will not be parsed
+
+</textarea>
 			<div id="description">
-				<span id="title">Problem 1: Write 'hey' 300 times.</span><br /><br />
-				<span id="text">Write a program that will print the word 'hey' three hundred times.</span>
+				<span id="title">Problem 1: Greet your computer.</span><br /><br />
+				<span id="text">Write a program that prints "Hello computer!"<br /><br />To print, write <br />PRINT "your message"<br />on its own line.<br /><br />
+					To run, hit "submit" below, or hit CTRL+S in the text box.</span>
 			</div>
 			<div id="output">
 				<a href="#">submit</a>
@@ -128,13 +136,13 @@
 			<div id="overlay"></div>
 			<div id="alert">
 				<span id="alert-title">Hello World!</span><br /><br />
-				<span id="alert-text">Thank you for your purchase of the TinkerCo 3250. We hope you think assembly is as fun as we do. Let's make 2100 a great year for coding!</span>
+				<span id="alert-text">Thank you for your purchase of the TinkerCo 3250. We hope you think programming is as fun as we do. Let's make 2100 a great year for coding!</span>
 				<div id="alert-close"><a href="#" onclick="closeAlert();">close</a></div>
 			</div>
 		</div>
 	</body>
 	<script type="text/javascript">
-	function showAlert(){
+		function showAlert(){
 			document.getElementById("alert").style.visibility = "visible";
 			document.getElementById("overlay").style.visibility = "visible";
 		}
@@ -142,6 +150,39 @@
 		function closeAlert(){
 			document.getElementById("alert").style.visibility = "hidden";
 			document.getElementById("overlay").style.visibility = "hidden";
+		}
+
+		function parse(){
+			var program = document.getElementById("textbox").value;
+			var programLines = program.match(/[^\r\n]+/g);
+			var output = "";
+			var token  = "";
+			var string = "";
+			var mode   = 0;
+
+			for(var i = 0; i < programLines.length; i++){
+				var line = programLines[i];
+
+				if(line.length > 2 && line[0] != "/" && line[1] != "/"){
+					for(var j = 0; j < line.length; j++){
+						if(mode == 0){
+							if(line[j] != " " || line[j] != "\t" || line[j] != "\n"){
+								token += line[j];
+							}else{
+								if(token != ""){
+									if(token == "PRINT"){
+										mode = 1;
+									}
+								}
+							}
+						}else{
+							if(line[j] != "\""){
+								string += line[j];
+							}
+						}
+					}
+				}
+			}
 		}
 
 		function typing(e){
@@ -164,6 +205,9 @@
 
 				// prevent the focus lose
 				e.preventDefault();
+			}else if(e.ctrlKey && e.keyCode === 83){
+				event.preventDefault();
+				parse();
 			}
 		}
 	</script>
