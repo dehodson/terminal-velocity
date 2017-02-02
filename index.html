@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+	<style>
+		body, html{
+			height:100%;
+			margin:0;
+			color: #2F2;
+			background-color: #000;
+			font-family: "Inconsolata", monospace;
+			font-size: 3vmin;
+		}
+		#main-container{
+			width: 95vmin;
+			height: 95vmin;
+			position: absolute;
+			top:   0vmin;
+			left:  0vmin;
+			bottom:0vmin;
+			right: 0vmin;
+			padding: 2.5vmin;
+			margin:auto;
+			transform: perspective(50vmin) rotateY(5deg) scale(.8,.8);
+			background-color: #111;
+			background-image: url("./scanlines.png");
+			background-size: 100%;
+			border-radius: 3vmin;
+			box-shadow: 0vmin 0vmin 7vmin rgba(100, 200, 100, 0.5);
+			overflow: hidden;
+		}
+		#textbox{
+			width:55.5vmin;
+			height:93vmin;
+			position: absolute;
+			left:2.5vmin;
+			top:2.5vmin;
+			padding:.5vmin;
+			color:#2F2;
+			background: transparent;
+			border: .5vmin solid #2F2;
+			font-family: "Inconsolata", monospace;
+			font-size: 3vmin;
+			resize: none;
+		}
+		#description{
+			width:33vmin;
+			height:69vmin;
+			border: .5vmin solid #2F2;
+			padding:.5vmin;
+			right: 2.5vmin;
+			top: 2.5vmin;
+			position: absolute;
+		}
+		#title{
+			font-weight: bold;
+		}
+		#output{
+			width:33vmin;
+			height:20vmin;
+			bottom:2.7vmin;
+			right:2.5vmin;
+			border: .5vmin solid #2F2;
+			padding:.5vmin;
+			position: absolute;
+			text-align: center;
+			line-height: 18vmin;
+		}
+		a:visited{
+			color:#2F2;
+		}
+		a:link{
+			color:#2F2;
+		}
+		a:hover{
+			color:#7F7;
+		}
+		a:active{
+			color:#2F2;
+		}
+		#alert{
+			border: .5vmin solid #2F2;
+			padding:.5vmin;
+			text-align:center;
+			width: 40vmin;
+			height: 40vmin;
+			position: absolute;
+			top:   0vmin;
+			left:  0vmin;
+			bottom:0vmin;
+			right: 0vmin;
+			margin: auto;
+			background-color: #111;
+			background-image: url("./scanlines.png");
+			background-size: 250%;
+			z-index: 5;
+		}
+		#alert-title{
+			font-weight: bold;
+		}
+		#alert-close{
+			width: 100%;
+			position: absolute;
+			left:0vmin;
+			bottom: 2.5vmin;
+		}
+		#overlay{
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top:0vmin;
+			left: 0vmin;
+			background-image: url("./scanlines.png");
+			background-size: 100%;
+		}
+	</style>
+</head>
+	<body>
+		<div id="main-container">
+			<textarea id="textbox" onkeydown="typing(event)">testicles</textarea>
+			<div id="description">
+				<span id="title">Problem 1: Write 'hey' 300 times.</span><br /><br />
+				<span id="text">Write a program that will print the word 'hey' three hundred times.</span>
+			</div>
+			<div id="output">
+				<a href="#">submit</a>
+			</div>
+			<div id="overlay"></div>
+			<div id="alert">
+				<span id="alert-title">Hello World!</span><br /><br />
+				<span id="alert-text">Thank you for your purchase of the TinkerCo 3250. We hope you think assembly is as fun as we do. Let's make 2100 a great year for coding!</span>
+				<div id="alert-close"><a href="#" onclick="closeAlert();">close</a></div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+	function showAlert(){
+			document.getElementById("alert").style.visibility = "visible";
+			document.getElementById("overlay").style.visibility = "visible";
+		}
+
+		function closeAlert(){
+			document.getElementById("alert").style.visibility = "hidden";
+			document.getElementById("overlay").style.visibility = "hidden";
+		}
+
+		function typing(e){
+			if(e.keyCode === 9) { // tab was pressed
+				// get caret position/selection
+				var $this = document.getElementById("textbox");
+
+				var start = $this.selectionStart;
+				var end = $this.selectionEnd;
+
+				var value = $this.value;
+
+				// set textarea value to: text before caret + tab + text after caret
+				$this.value = value.substring(0, start)
+				            + "  "
+				            + value.substring(end);
+
+				// put caret at right position again (add one for the tab)
+				$this.selectionStart = $this.selectionEnd = start + 2;
+
+				// prevent the focus lose
+				e.preventDefault();
+			}
+		}
+	</script>
+</html>
