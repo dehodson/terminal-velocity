@@ -131,7 +131,7 @@
 					To run, hit "submit" below, or hit CTRL+S in the text box.</span>
 			</div>
 			<div id="output">
-				<a href="#">submit</a>
+				<a href="#" onclick="parse();">submit</a>
 			</div>
 			<div id="overlay"></div>
 			<div id="alert">
@@ -155,34 +155,79 @@
 		function parse(){
 			var program = document.getElementById("textbox").value;
 			var programLines = program.match(/[^\r\n]+/g);
-			var output = "";
 			var token  = "";
-			var string = "";
 			var mode   = 0;
+
+			var tree  = [];
+			var place = -1;
 
 			for(var i = 0; i < programLines.length; i++){
 				var line = programLines[i];
 
 				if(line.length > 2 && line[0] != "/" && line[1] != "/"){
+					tree.push([]);
+					place++;
+
 					for(var j = 0; j < line.length; j++){
 						if(mode == 0){
-							if(line[j] != " " || line[j] != "\t" || line[j] != "\n"){
+							if(line[j] == "\""){
+								mode = 1;
+								if(token != ""){
+									tree[place].push(token);
+									token = "";
+								}
+							}else if(line[j] != " " && line[j] != "\t" && line[j] != "\n"){
 								token += line[j];
 							}else{
 								if(token != ""){
-									if(token == "PRINT"){
-										mode = 1;
-									}
+									tree[place].push(token);
+									token = "";
 								}
 							}
 						}else{
-							if(line[j] != "\""){
-								string += line[j];
+							if(line[j] == "\""){
+								if(token != ""){
+									tree[place].push(token);
+									token = "";
+								}
+								mode = 0;
+							}else{
+								token += line[j];
 							}
 						}
 					}
 				}
+
+				mode = 0;
+
+				if(token != ""){
+					tree[place].push(token);
+					token = "";
+				}
 			}
+
+			console.log(tree);
+
+			var output = "";
+			var labels    = {};
+			var variables = {};
+
+			for(var i = 0; i < tree.length; i++){
+				if(tree[i][0].slice(-1) == ":"){
+					labels[tree[i][0].slice(0, -1)] = i;
+				}else if(tree[i][0] == "PRINT"){
+					output += tree[i][1];
+				}else if(tree[i][0] == "GOTO"){
+					if(labels.hasOwnProperty(tree[i][1])){
+						i = labels[tree[i][1]];
+					}
+				}
+			}
+
+			document.getElementById("alert-title").innerText = "Program Output";
+			document.getElementById("alert-text").innerText = output;
+
+			showAlert();
 		}
 
 		function typing(e){
