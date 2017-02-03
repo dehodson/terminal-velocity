@@ -4,13 +4,16 @@ var levels = [
 		title: "Greet your computer",
 		text: "Write a program that prints \"Hello computer!\"<br /><br />To print, write <br />" +
 			"PRINT \"your message\"<br />on its own line.<br /><br />To run, hit \"submit\" below, " +
-			"or hit CTRL+S in the text box.",
+			"or hit CTRL+ENTER in the text box.",
 		default: "//type code in this box\n//lines beginning with a double\n//slash will not be parsed\n\nPRINT \"Hello computer!\"\n",
 		solution: function(output){
 			if(output == "Hello computer!"){
 				return true;
 			}
 			return false;
+		},
+		listen: function(){
+			return Math.floor((Math.random() * 10));
 		}
 	},
 	{
@@ -27,7 +30,7 @@ var levels = [
 	},
 	{
 		title: "Mathemagical",
-		text: "Add anything the variable hello and print it.<br /><br />To add to a variable, use the ADD command:<br /><br />ADD NAME NUMBER" +
+		text: "Add anything to the variable hello and print it.<br /><br />To add to a variable, use the ADD command:<br /><br />ADD NAME NUMBER" +
 			"<br /><br />For example:<br />ADD counter 10",
 		default: "//add something to this\n//and we'll call it a day.\n\nVAR hello = 5\n\nPRINT hello",
 		solution: function(output){
@@ -43,22 +46,26 @@ var currentLevel = 0;
 var gameMode = 0;
 var currentOutput = "";
 var gameStarted = 0;
+var alertActive = true;
 
 function showAlert(){
 	document.getElementById("alert").style.visibility = "visible";
 	document.getElementById("overlay").style.visibility = "visible";
+
+	alertActive = true;
 }
 
 function closeAlert(){
 	document.getElementById("alert").style.visibility = "hidden";
 	document.getElementById("overlay").style.visibility = "hidden";
 
+	alertActive = false;
+
 	if(gameMode == 1){
 		if(levels[currentLevel].solution(currentOutput)){
 			document.getElementById("alert-title").innerText = "Congratulations";
 			document.getElementById("alert-text").innerText = "Your program was a success!";
-			document.getElementById("alert").style.visibility = "visible";
-			document.getElementById("overlay").style.visibility = "visible";
+			showAlert();
 
 			gameMode = 0;
 		}
@@ -143,9 +150,9 @@ function parse(){
 
 	function skipAhead(){
 		for(var j = i + 1; j < tree.length; j++){
-			if(tree[j][0] == "IF"){
+			if(tree[j][0].toUpperCase() == "IF"){
 				ifLevel++;
-			}else if(tree[j][0] == "ENDIF"){
+			}else if(tree[j][0].toUpperCase() == "ENDIF"){
 				ifLevel--;
 			}
 
@@ -158,34 +165,34 @@ function parse(){
 	}
 
 	function toNum(n){
-		if(variables.hasOwnProperty(tree[i][n])){
-			return variables[tree[i][n]];
+		if(variables.hasOwnProperty(tree[i][n].toUpperCase())){
+			return variables[tree[i][n].toUpperCase()];
 		}else{
-			return parseInt(tree[i][n]);
+			return parseInt(tree[i][n].toUpperCase());
 		}
 	}
 
 	for(var i = 0; i < tree.length; i++){
 		if(steps < 100000){
-			if(tree[i][0].slice(-1) == ":"){
-				labels[tree[i][0].slice(0, -1)] = i;
-			}else if(tree[i][0] == "PRINT"){
-				if(variables.hasOwnProperty(tree[i][1])){
-					output += variables[tree[i][1]];
+			if(tree[i][0].toUpperCase().slice(-1) == ":"){
+				labels[tree[i][0].toUpperCase().slice(0, -1)] = i;
+			}else if(tree[i][0].toUpperCase() == "PRINT"){
+				if(variables.hasOwnProperty(tree[i][1].toUpperCase())){
+					output += variables[tree[i][1].toUpperCase()];
 				}else{
 					output += tree[i][1];
 				}
-			}else if(tree[i][0] == "GOTO"){
-				if(labels.hasOwnProperty(tree[i][1])){
-					i = labels[tree[i][1]];
+			}else if(tree[i][0].toUpperCase() == "GOTO"){
+				if(labels.hasOwnProperty(tree[i][1].toUpperCase())){
+					i = labels[tree[i][1].toUpperCase()];
 				}
-			}else if(tree[i][0] == "VAR"){
-				variables[tree[i][1]] = toNum(3);
-			}else if(tree[i][0] == "ADD"){
-				variables[tree[i][1]] += toNum(2);
-			}else if(tree[i][0] == "SUB"){
-				variables[tree[i][1]] -= toNum(2);
-			}else if(tree[i][0] == "IF"){
+			}else if(tree[i][0].toUpperCase() == "VAR"){
+				variables[tree[i][1].toUpperCase()] = toNum(3);
+			}else if(tree[i][0].toUpperCase() == "ADD"){
+				variables[tree[i][1].toUpperCase()] += toNum(2);
+			}else if(tree[i][0].toUpperCase() == "SUB"){
+				variables[tree[i][1].toUpperCase()] -= toNum(2);
+			}else if(tree[i][0].toUpperCase() == "IF"){
 				if(tree[i][2] == "<"){
 					if(toNum(1) >= toNum(3)){
 						skipAhead();
@@ -206,6 +213,10 @@ function parse(){
 					if(toNum(1) != toNum(3)){
 						skipAhead();
 					}
+				}
+			}else if(tree[i][0].toUpperCase() == "LISTEN"){
+				if(levels[currentLevel].hasOwnProperty("listen")){
+					variables[tree[i][1].toUpperCase()] = levels[currentLevel].listen();
 				}
 			}
 			steps++;
@@ -250,8 +261,11 @@ function typing(e){
 
 		// prevent the focus lose
 		e.preventDefault();
-	}else if(e.ctrlKey && e.keyCode === 83){
-		event.preventDefault();
+	}else if(e.keyCode === 13 && alertActive){
+		closeAlert();
+		e.preventDefault();
+	}else if(e.ctrlKey && e.keyCode === 13){
+		e.preventDefault();
 		parse();
 	}
 }
