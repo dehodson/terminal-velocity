@@ -94,6 +94,7 @@
 			background-image: url("./scanlines.png");
 			background-size: 250%;
 			z-index: 5;
+			word-wrap: break-word;
 		}
 		#alert-title{
 			font-weight: bold;
@@ -211,23 +212,67 @@
 			var output = "";
 			var labels    = {};
 			var variables = {};
+			var steps = 0;
+			var success = true;
+			var ifLevel = 1;
 
 			for(var i = 0; i < tree.length; i++){
-				if(tree[i][0].slice(-1) == ":"){
-					labels[tree[i][0].slice(0, -1)] = i;
-				}else if(tree[i][0] == "PRINT"){
-					output += tree[i][1];
-				}else if(tree[i][0] == "GOTO"){
-					if(labels.hasOwnProperty(tree[i][1])){
-						i = labels[tree[i][1]];
+				if(steps < 100000){
+					if(tree[i][0].slice(-1) == ":"){
+						labels[tree[i][0].slice(0, -1)] = i;
+					}else if(tree[i][0] == "PRINT"){
+						if(variables.hasOwnProperty(tree[i][1])){
+							output += variables[tree[i][1]];
+						}else{
+							output += tree[i][1];
+						}
+					}else if(tree[i][0] == "GOTO"){
+						if(labels.hasOwnProperty(tree[i][1])){
+							i = labels[tree[i][1]];
+						}
+					}else if(tree[i][0] == "VAR"){
+						variables[tree[i][1]] = parseInt(tree[i][3]);
+					}else if(tree[i][0] == "ADD"){
+						variables[tree[i][1]] += parseInt(tree[i][2]);
+					}else if(tree[i][0] == "SUB"){
+						variables[tree[i][1]] -= parseInt(tree[i][2]);
+					}else if(tree[i][0] == "IF"){
+						if(tree[i][2] == "<"){
+							if(variables[tree[i][1]] >= parseInt(tree[i][3])){
+								for(var j = i + 1; j < tree.length; j++){
+									if(tree[j][0] == "IF"){
+										ifLevel++;
+									}else if(tree[j][0] == "ENDIF"){
+										ifLevel--;
+									}
+
+									if(ifLevel == 0){
+										i = j;
+										ifLevel = 1;
+										break;
+									}
+								}
+							}
+						}
 					}
+					steps++;
+				}else{
+					document.getElementById("alert-title").innerText = "Error";
+					document.getElementById("alert-text").innerText = "Program executed for too long.";
+					showAlert();
+
+					success = false;
+
+					break;
 				}
 			}
 
-			document.getElementById("alert-title").innerText = "Program Output";
-			document.getElementById("alert-text").innerText = output;
+			if(success){
+				document.getElementById("alert-title").innerText = "Program Output";
+				document.getElementById("alert-text").innerText = output;
 
-			showAlert();
+				showAlert();
+			}
 		}
 
 		function typing(e){
