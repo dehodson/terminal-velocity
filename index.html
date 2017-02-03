@@ -125,6 +125,7 @@
 //lines beginning with a double 
 //slash will not be parsed
 
+PRINT "test"
 </textarea>
 			<div id="description">
 				<span id="title">Problem 1: Greet your computer.</span><br /><br />
@@ -216,6 +217,30 @@
 			var success = true;
 			var ifLevel = 1;
 
+			function skipAhead(){
+				for(var j = i + 1; j < tree.length; j++){
+					if(tree[j][0] == "IF"){
+						ifLevel++;
+					}else if(tree[j][0] == "ENDIF"){
+						ifLevel--;
+					}
+
+					if(ifLevel == 0){
+						i = j;
+						ifLevel = 1;
+						break;
+					}
+				}
+			}
+
+			function toNum(n){
+				if(variables.hasOwnProperty(tree[i][n])){
+					return variables[tree[i][n]];
+				}else{
+					return parseInt(tree[i][n]);
+				}
+			}
+
 			for(var i = 0; i < tree.length; i++){
 				if(steps < 100000){
 					if(tree[i][0].slice(-1) == ":"){
@@ -231,34 +256,38 @@
 							i = labels[tree[i][1]];
 						}
 					}else if(tree[i][0] == "VAR"){
-						variables[tree[i][1]] = parseInt(tree[i][3]);
+						variables[tree[i][1]] = toNum(3);
 					}else if(tree[i][0] == "ADD"){
-						variables[tree[i][1]] += parseInt(tree[i][2]);
+						variables[tree[i][1]] += toNum(2);
 					}else if(tree[i][0] == "SUB"){
-						variables[tree[i][1]] -= parseInt(tree[i][2]);
+						variables[tree[i][1]] -= toNum(2);
 					}else if(tree[i][0] == "IF"){
 						if(tree[i][2] == "<"){
-							if(variables[tree[i][1]] >= parseInt(tree[i][3])){
-								for(var j = i + 1; j < tree.length; j++){
-									if(tree[j][0] == "IF"){
-										ifLevel++;
-									}else if(tree[j][0] == "ENDIF"){
-										ifLevel--;
-									}
-
-									if(ifLevel == 0){
-										i = j;
-										ifLevel = 1;
-										break;
-									}
-								}
+							if(toNum(1) >= toNum(3)){
+								skipAhead();
+							}
+						}else if(tree[i][2] == ">"){
+							if(toNum(1) <= toNum(3)){
+								skipAhead();
+							}
+						}else if(tree[i][2] == ">="){
+							if(toNum(1) < toNum(3)){
+								skipAhead();
+							}
+						}else if(tree[i][2] == "<="){
+							if(toNum(1) > toNum(3)){
+								skipAhead();
+							}
+						}else if(tree[i][2] == "=="){
+							if(toNum(1) != toNum(3)){
+								skipAhead();
 							}
 						}
 					}
 					steps++;
 				}else{
 					document.getElementById("alert-title").innerText = "Error";
-					document.getElementById("alert-text").innerText = "Program executed for too long.";
+					document.getElementById("alert-text").innerText = "Uh oh! Something went wrong. Please inspect your code.";
 					showAlert();
 
 					success = false;
