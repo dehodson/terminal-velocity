@@ -12,9 +12,7 @@ var levels = [
 			}
 			return false;
 		},
-		listen: function(){
-			return Math.floor((Math.random() * 10));
-		}
+		input: [0, 1, 2, 3, 4, 5]
 	},
 	{
 		title: "Your answer may vary",
@@ -164,71 +162,85 @@ function parse(){
 		}
 	}
 
-	function toNum(n){
-		if(variables.hasOwnProperty(tree[i][n].toUpperCase())){
-			return variables[tree[i][n].toUpperCase()];
-		}else{
-			return parseInt(tree[i][n].toUpperCase());
+	function parseTree(input){
+		
+		function toNum(n){
+			if(variables.hasOwnProperty(tree[i][n].toUpperCase())){
+				return variables[tree[i][n].toUpperCase()];
+			}else{
+				return parseInt(tree[i][n].toUpperCase());
+			}
+		}
+
+		for(var i = 0; i < tree.length; i++){
+			if(steps < 100000){
+				if(tree[i][0].toUpperCase().slice(-1) == ":"){
+					labels[tree[i][0].toUpperCase().slice(0, -1)] = i;
+				}else if(tree[i][0].toUpperCase() == "PRINT"){
+					if(variables.hasOwnProperty(tree[i][1].toUpperCase())){
+						output += variables[tree[i][1].toUpperCase()];
+					}else{
+						output += tree[i][1];
+					}
+				}else if(tree[i][0].toUpperCase() == "GOTO"){
+					if(labels.hasOwnProperty(tree[i][1].toUpperCase())){
+						i = labels[tree[i][1].toUpperCase()];
+					}
+				}else if(tree[i][0].toUpperCase() == "VAR"){
+					variables[tree[i][1].toUpperCase()] = toNum(3);
+				}else if(tree[i][0].toUpperCase() == "ADD"){
+					variables[tree[i][1].toUpperCase()] += toNum(2);
+				}else if(tree[i][0].toUpperCase() == "SUB"){
+					variables[tree[i][1].toUpperCase()] -= toNum(2);
+				}else if(tree[i][0].toUpperCase() == "IF"){
+					if(tree[i][2] == "<"){
+						if(toNum(1) >= toNum(3)){
+							skipAhead();
+						}
+					}else if(tree[i][2] == ">"){
+						if(toNum(1) <= toNum(3)){
+							skipAhead();
+						}
+					}else if(tree[i][2] == ">="){
+						if(toNum(1) < toNum(3)){
+							skipAhead();
+						}
+					}else if(tree[i][2] == "<="){
+						if(toNum(1) > toNum(3)){
+							skipAhead();
+						}
+					}else if(tree[i][2] == "=="){
+						if(toNum(1) != toNum(3)){
+							skipAhead();
+						}
+					}
+				}else if(tree[i][0].toUpperCase() == "READ"){
+					variables[tree[i][1].toUpperCase()] = input;
+				}
+				steps++;
+			}else{
+				document.getElementById("alert-title").innerText = "Error";
+				document.getElementById("alert-text").innerText = "Uh oh! Something went wrong. Please inspect your code.";
+				showAlert();
+
+				success = false;
+
+				break;
+			}
 		}
 	}
 
-	for(var i = 0; i < tree.length; i++){
-		if(steps < 100000){
-			if(tree[i][0].toUpperCase().slice(-1) == ":"){
-				labels[tree[i][0].toUpperCase().slice(0, -1)] = i;
-			}else if(tree[i][0].toUpperCase() == "PRINT"){
-				if(variables.hasOwnProperty(tree[i][1].toUpperCase())){
-					output += variables[tree[i][1].toUpperCase()];
-				}else{
-					output += tree[i][1];
-				}
-			}else if(tree[i][0].toUpperCase() == "GOTO"){
-				if(labels.hasOwnProperty(tree[i][1].toUpperCase())){
-					i = labels[tree[i][1].toUpperCase()];
-				}
-			}else if(tree[i][0].toUpperCase() == "VAR"){
-				variables[tree[i][1].toUpperCase()] = toNum(3);
-			}else if(tree[i][0].toUpperCase() == "ADD"){
-				variables[tree[i][1].toUpperCase()] += toNum(2);
-			}else if(tree[i][0].toUpperCase() == "SUB"){
-				variables[tree[i][1].toUpperCase()] -= toNum(2);
-			}else if(tree[i][0].toUpperCase() == "IF"){
-				if(tree[i][2] == "<"){
-					if(toNum(1) >= toNum(3)){
-						skipAhead();
-					}
-				}else if(tree[i][2] == ">"){
-					if(toNum(1) <= toNum(3)){
-						skipAhead();
-					}
-				}else if(tree[i][2] == ">="){
-					if(toNum(1) < toNum(3)){
-						skipAhead();
-					}
-				}else if(tree[i][2] == "<="){
-					if(toNum(1) > toNum(3)){
-						skipAhead();
-					}
-				}else if(tree[i][2] == "=="){
-					if(toNum(1) != toNum(3)){
-						skipAhead();
-					}
-				}
-			}else if(tree[i][0].toUpperCase() == "LISTEN"){
-				if(levels[currentLevel].hasOwnProperty("listen")){
-					variables[tree[i][1].toUpperCase()] = levels[currentLevel].listen();
-				}
-			}
-			steps++;
-		}else{
-			document.getElementById("alert-title").innerText = "Error";
-			document.getElementById("alert-text").innerText = "Uh oh! Something went wrong. Please inspect your code.";
-			showAlert();
-
-			success = false;
-
-			break;
+	if(levels[currentLevel].hasOwnProperty("input")){
+		for(var inp in levels[currentLevel].input){
+			parseTree(levels[currentLevel].input[inp]);
+			labels    = {};
+			variables = {};
+			steps = 0;
+			success = true;
+			ifLevel = 1;
 		}
+	}else{
+		parseTree(0);
 	}
 
 	if(success){
