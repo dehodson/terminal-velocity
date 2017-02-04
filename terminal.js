@@ -11,8 +11,7 @@ var levels = [
 				return true;
 			}
 			return false;
-		},
-		input: [0, 1, 2, 3, 4, 5]
+		}
 	},
 	{
 		title: "Your answer may vary",
@@ -37,10 +36,36 @@ var levels = [
 			}
 			return false;
 		}
+	},
+	{
+		title: "I appreciate your input",
+		text: "A good program will need a way to input things. To read input into your program, use the READ command.<br /><br />Your program will" +
+			" run over and over again for as long as there is input.<br /><br />In order to complete this exercise, read from the input and print it.",
+		default: "//declare a variable called\n//anything\n\n\nREAD anything\nPRINT anything\n\n//this line is so there's\n//spaces between the numbers\nPRINT \" \"",
+		solution: function(output){
+			if(output == "0 1 2 3 4 5 "){
+				return true;
+			}
+			return false;
+		},
+		input: [0, 1, 2, 3, 4, 5]
+	},
+	{
+		title: "Added intrigue",
+		text: "Read each number from the input. Add one, then output it.<br /><br />Sample input:<br />0 1 2 3 4 5<br /><br />" +
+			"Because there are six inputs to process, the same program will run six times.",
+		default: "//declare a variable called\n//anything\n\n\nREAD anything\nPRINT anything\n\n//this line is so there's\n//spaces between the numbers\nPRINT \" \"",
+		solution: function(output){
+			if(output == "1 2 3 4 5 6 "){
+				return true;
+			}
+			return false;
+		},
+		input: [0, 1, 2, 3, 4, 5]
 	}
 ];
 
-var currentLevel = 0;
+var currentLevel = 3;
 var gameMode = 0;
 var currentOutput = "";
 var gameStarted = 0;
@@ -79,6 +104,11 @@ function closeAlert(){
 
 	gameStarted = 1;
 }
+
+/*Debug code. But it's not a huge deal if you forget to remove this.*/
+document.getElementById("title").innerText = "Problem "+(currentLevel + 1)+": "+levels[currentLevel].title;
+document.getElementById("text").innerHTML = levels[currentLevel].text;
+document.getElementById("textbox").value = levels[currentLevel].default;
 
 function parse(){
 
@@ -163,7 +193,7 @@ function parse(){
 	}
 
 	function parseTree(input){
-		
+
 		function toNum(n){
 			if(variables.hasOwnProperty(tree[i][n].toUpperCase())){
 				return variables[tree[i][n].toUpperCase()];
@@ -187,7 +217,11 @@ function parse(){
 						i = labels[tree[i][1].toUpperCase()];
 					}
 				}else if(tree[i][0].toUpperCase() == "VAR"){
-					variables[tree[i][1].toUpperCase()] = toNum(3);
+					if(tree[i].length > 2){
+						variables[tree[i][1].toUpperCase()] = toNum(3);
+					}else{
+						variables[tree[i][1].toUpperCase()] = 0;
+					}
 				}else if(tree[i][0].toUpperCase() == "ADD"){
 					variables[tree[i][1].toUpperCase()] += toNum(2);
 				}else if(tree[i][0].toUpperCase() == "SUB"){
@@ -245,7 +279,7 @@ function parse(){
 
 	if(success){
 		document.getElementById("alert-title").innerText = "Program Output";
-		document.getElementById("alert-text").innerText = output;
+		document.getElementById("alert-text").innerHTML = output.replace(/ /g,"&nbsp;");;
 
 		currentOutput = output;
 
