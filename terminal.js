@@ -52,11 +52,23 @@ var levels = [
 	},
 	{
 		title: "Added intrigue",
-		text: "Read each number from the input. Add one, then output it.<br /><br />Sample input:<br />0 1 2 3 4 5<br /><br />" +
+		text: "Read each number from the input. Add one, then output it.<br /><br />Sample input:<br />0 1 2 3 4 5<br /><br />Expected output:<br />1 2 3 4 5 6" +
 			"Because there are six inputs to process, the same program will run six times.",
-		default: "//declare a variable called\n//anything\n\n\nREAD anything\nPRINT anything\n\n//this line is so there's\n//spaces between the numbers\nPRINT \" \"",
+		default: "",
 		solution: function(output){
 			if(output == "1 2 3 4 5 6 "){
+				return true;
+			}
+			return false;
+		},
+		input: [0, 1, 2, 3, 4, 5]
+	},
+	{
+		title: "Double trouble",
+		text: "Read each number from the input. Then, double it.<br /><br />Sample input:<br />0 5 2<br /><br />Expected output:<br />0 10 4",
+		default: "",
+		solution: function(output){
+			if(output == "0 2 4 6 8 10 "){
 				return true;
 			}
 			return false;
