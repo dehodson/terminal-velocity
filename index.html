@@ -114,6 +114,46 @@
 			background-image: url("./scanlines.png");
 			background-size: 100%;
 		}
+		#controls{
+			opacity: .5;
+			position: absolute;
+			bottom: .5vmin;
+			right: .5vmin;
+			font-size: 1.8vmin;
+		}
+		#controls:hover{
+			opacity: 1;
+		}
+		#doc-overlay{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			top:0vmin;
+			left:0vmin;
+			background-color: rgba(0, 0, 0, 0.8);
+			visibility: hidden;
+		}
+		#documentation{
+			width: 61.8vmin;
+			height: 80vmin;
+			position: absolute;
+			top:   0vmin;
+			left:  0vmin;
+			bottom:0vmin;
+			right: 0vmin;
+			padding: 2.5vmin;
+			margin:auto;
+			background-color: #DDD;
+			overflow: hidden;
+			color: #000;
+			font-family: "Helvetica", "Arial", sans-serif;
+			font-size: 2vmin;
+			overflow-y: scroll;
+			visibility: hidden;
+		}
+		#documentation h2, h3{
+			text-align: center;
+		}
 	</style>
 	<title>Terminal Velocity</title>
 </head>
@@ -121,16 +161,10 @@
 	<body>
 		<div id="main-container">
 
-<textarea id="textbox" onkeydown="typing(event)">//type code in this box
-//lines beginning with a double 
-//slash will not be parsed
-
-PRINT "test"
-</textarea>
+<textarea id="textbox" onkeydown="typing(event)"></textarea>
 			<div id="description">
-				<span id="title">Problem 1: Greet your computer</span><br /><br />
-				<span id="text">Write a program that prints "Hello computer!"<br /><br />To print, write <br />PRINT "your message"<br />on its own line.<br /><br />
-					To run, hit "submit" below, or hit CTRL+ENTER in the text box.</span>
+				<span id="title"></span><br /><br />
+				<span id="text"></span>
 			</div>
 			<div id="output">
 				<a href="#" onclick="parse();">submit</a>
@@ -141,6 +175,41 @@ PRINT "test"
 				<span id="alert-text">Thank you for your purchase of the TinkerCo 3250. We hope you think programming is as fun as we do. Let's make 1971 a great year for coding!</span>
 				<div id="alert-close"><a href="#" onclick="closeAlert();">close</a></div>
 			</div>
+		</div>
+		<div id="doc-overlay" onclick="closeDocumentation();"></div>
+		<div id="documentation">
+			<h2>TinkerCo 3250 Reference</h2>
+			&nbsp;&nbsp;&nbsp;&nbsp;Thank you for your purchase of the TinkerCo 3250, even in the face of recent lawsuits. We have a constant commitment to quality computers that we hope comes through in our product. We hope you'll find this computer to be blazing fast and free of any alleged spontaneous combustion.
+			<h3>BASIC on the TinkerCo 3250</h3>
+			&nbsp;&nbsp;&nbsp;&nbsp;The TinkerCo 3250 has a built in BASIC parser that will be sure to knock your socks off. Enjoy the following commands, all included free of charge:
+			<h4>PRINT</h4>
+			Print out a string or a variable.<br/><br/>Usage:<br/>
+			PRINT "Hello world!"<br/>
+			<h4>VAR</h4>
+			Declare a variable.<br/><br/>Usage:<br/>
+			VAR foo = 6<br/>
+			<h4>ADD</h4>
+			Add a number to a variable. The variable will store the new value. This can also be used to add two variables together.<br/><br/>Usage:<br/>
+			ADD variable 20<br/>
+			<h4>SUB</h4>
+			Subtract a number from a variable. The variable will store the new value. This can also be used to subtract one variable from another.<br/><br/>Usage:<br/>
+			SUB counter 1<br/>
+			<h4>READ</h4>
+			Read a number from the input, and store it in a variable.<br/><br/>Usage:<br/>
+			READ variable<br/>
+			<h4>IF</h4>
+			If the condition is true, continue. Otherwise, jump to the next ENDIF.<br/><br/>Usage:<br/>
+			IF x < 4<br/>PRINT "less than four!"<br />ENDIF<br/>
+			<h4>GOTO</h4>
+			Jump to a previously defined label.<br/><br/>Usage:<br/>
+			LABEL:<br/>PRINT "infinite loop"<br/>GOTO LABEL<br/>
+		</div>
+		<div id="controls">
+			<a href="#" onclick="documentation();">documentation</a>
+			&#9632;
+			<a href="#" onclick="previous();">previous</a>
+			&#9632;
+			<a href="#" onclick="next();">next</a>
 		</div>
 	</body>
 	<script src="terminal.js"></script>

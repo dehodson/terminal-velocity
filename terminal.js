@@ -138,7 +138,6 @@ function closeAlert(){
 	gameStarted = 1;
 }
 
-/*Debug code. But it's not a huge deal if you forget to remove this.*/
 document.getElementById("title").innerText = "Problem "+(currentLevel + 1)+": "+levels[currentLevel].title;
 document.getElementById("text").innerHTML = levels[currentLevel].text;
 document.getElementById("textbox").value = levels[currentLevel].default;
@@ -355,6 +354,34 @@ function parse(){
 
 		showAlert();
 	}
+}
+
+function next(){
+	currentLevel++;
+
+	document.getElementById("title").innerText = "Problem "+(currentLevel + 1)+": "+levels[currentLevel].title;
+	document.getElementById("text").innerHTML = levels[currentLevel].text;
+	document.getElementById("textbox").value = levels[currentLevel].default;
+}
+
+function previous(){
+	if(currentLevel > 0){
+		currentLevel++;
+
+		document.getElementById("title").innerText = "Problem "+(currentLevel + 1)+": "+levels[currentLevel].title;
+		document.getElementById("text").innerHTML = levels[currentLevel].text;
+		document.getElementById("textbox").value = levels[currentLevel].default;
+	}
+}
+
+function documentation(){
+	document.getElementById("doc-overlay").style.visibility = "visible";
+	document.getElementById("documentation").style.visibility = "visible";
+}
+
+function closeDocumentation(){
+	document.getElementById("doc-overlay").style.visibility = "hidden";
+	document.getElementById("documentation").style.visibility = "hidden";
 }
 
 function typing(e){
