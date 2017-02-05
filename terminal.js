@@ -94,6 +94,29 @@ var levels = [
 		input: function(){
 			return Math.floor(Math.random() * 20);
 		}
+	},
+	{
+		title: "If you please",
+		text: "If the number in the input is negative, print false. If it's zero or positive, print true.<br /><br />Sample input:<br />-5 2 5<br /><br />Expected output:<br />false true true ",
+		default: "//Below, you can see the\n//IF command in action.\n\nIF variable < 0\n\nENDIF\n\n//Read the documentation for\n//more info.",
+		solution: function(input, output){
+			var string = "";
+			for(var i in input){
+				if(input[i] < 0){
+					string += "false "
+				}else{
+					string += "true "
+				}
+			}
+			console.log(string);
+			if(output == string){
+				return true;
+			}
+			return false;
+		},
+		input: function(){
+			return Math.floor(Math.random() * 20) - 10;
+		}
 	}
 ];
 
@@ -210,23 +233,23 @@ function parse(){
 
 	generated = [];
 
-	function skipAhead(){
-		for(var j = i + 1; j < tree.length; j++){
-			if(tree[j][0].toUpperCase() == "IF"){
-				ifLevel++;
-			}else if(tree[j][0].toUpperCase() == "ENDIF"){
-				ifLevel--;
-			}
+	function parseTree(input){
 
-			if(ifLevel == 0){
-				i = j;
-				ifLevel = 1;
-				break;
+		function skipAhead(){
+			for(var j = i + 1; j < tree.length; j++){
+				if(tree[j][0].toUpperCase() == "IF"){
+					ifLevel++;
+				}else if(tree[j][0].toUpperCase() == "ENDIF"){
+					ifLevel--;
+				}
+
+				if(ifLevel == 0){
+					i = j;
+					ifLevel = 1;
+					break;
+				}
 			}
 		}
-	}
-
-	function parseTree(input){
 
 		function toNum(n){
 			if(variables.hasOwnProperty(tree[i][n].toUpperCase())){
