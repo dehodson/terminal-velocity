@@ -6,7 +6,7 @@ var levels = [
 			"PRINT \"your message\"<br />on its own line.<br /><br />To run, hit \"submit\" below, " +
 			"or hit CTRL+ENTER in the text box.",
 		default: "//type code in this box\n//lines beginning with a double\n//slash will not be parsed\n\nPRINT \"test\"\n",
-		solution: function(output){
+		solution: function(input, output){
 			if(output == "Hello computer!"){
 				return true;
 			}
@@ -18,7 +18,7 @@ var levels = [
 		text: "Set a variable equal to 5, then print it.<br /><br />To declare a variable, type:<br /><br />VAR NAME = NUMBER" +
 			"<br /><br />Variables can be printed like so:<br />PRINT NAME",
 		default: "//see, like this.\n\nVAR hello = 5\n\n//just add a print command!\n",
-		solution: function(output){
+		solution: function(input, output){
 			if(output == "5"){
 				return true;
 			}
@@ -30,7 +30,7 @@ var levels = [
 		text: "Add anything to the variable hello and print it.<br /><br />To add to a variable, use the ADD command:<br /><br />ADD NAME NUMBER" +
 			"<br /><br />For example:<br />ADD counter 10",
 		default: "//add something to this\n//and we'll call it a day.\n\nVAR hello = 5\n\nPRINT hello",
-		solution: function(output){
+		solution: function(input, output){
 			if(parseInt(output) > 5){
 				return true;
 			}
@@ -42,38 +42,58 @@ var levels = [
 		text: "A good program will need a way to input things. To read input into your program, use the READ command.<br /><br />Your program will" +
 			" run over and over again for as long as there is input.<br /><br />In order to complete this exercise, read from the input and print it.",
 		default: "//declare a variable called\n//anything\n\n\nREAD anything\nPRINT anything\n\n//this line is so there's\n//spaces between the numbers\nPRINT \" \"",
-		solution: function(output){
-			if(output == "0 1 2 3 4 5 "){
+		solution: function(input, output){
+			var string = "";
+			for(var i in input){
+				string += input[i] + " ";
+			}
+			if(output == string){
 				return true;
 			}
 			return false;
 		},
-		input: [0, 1, 2, 3, 4, 5]
+		input: function(){
+			return Math.floor(Math.random() * 20);
+		}
 	},
 	{
 		title: "Added intrigue",
 		text: "Read each number from the input. Add one, then output it.<br /><br />Sample input:<br />0 1 2 3 4 5<br /><br />Expected output:<br />1 2 3 4 5 6" +
 			"<br />Because there are six inputs to process, the same program will run six times.",
 		default: "",
-		solution: function(output){
-			if(output == "1 2 3 4 5 6 "){
+		solution: function(input, output){
+			var string = "";
+			for(var i in input){
+				string += (parseInt(input[i]) + 1) + " ";
+			}
+			console.log(string);
+			if(output == string){
 				return true;
 			}
 			return false;
 		},
-		input: [0, 1, 2, 3, 4, 5]
+		input: function(){
+			return Math.floor(Math.random() * 20);
+		}
 	},
 	{
 		title: "Double trouble",
 		text: "Read each number from the input. Then, double it.<br /><br />Sample input:<br />0 5 2<br /><br />Expected output:<br />0 10 4",
 		default: "",
-		solution: function(output){
-			if(output == "0 2 4 6 8 10 "){
+		solution: function(input, output){
+			var string = "";
+			for(var i in input){
+				string += (parseInt(input[i]) * 2) + " ";
+			}
+			console.log(string);
+			if(output == string){
 				return true;
 			}
 			return false;
 		},
-		input: [0, 1, 2, 3, 4, 5]
+		input: function(){
+			return Math.floor(Math.random() * 20);
+		}
 	}
 ];
 
@@ -82,6 +102,7 @@ var gameMode = 0;
 var currentOutput = "";
 var gameStarted = 0;
 var alertActive = true;
+var generated = [];
 
 function showAlert(){
 	document.getElementById("alert").style.visibility = "visible";
@@ -97,7 +118,7 @@ function closeAlert(){
 	alertActive = false;
 
 	if(gameMode == 1){
-		if(levels[currentLevel].solution(currentOutput)){
+		if(levels[currentLevel].solution(generated, currentOutput)){
 			document.getElementById("alert-title").innerText = "Congratulations";
 			document.getElementById("alert-text").innerText = "Your program was a success!";
 			showAlert();
@@ -187,6 +208,8 @@ function parse(){
 	var steps = 0;
 	var success = true;
 	var ifLevel = 1;
+
+	generated = [];
 
 	function skipAhead(){
 		for(var j = i + 1; j < tree.length; j++){
@@ -293,8 +316,12 @@ function parse(){
 	}
 
 	if(levels[currentLevel].hasOwnProperty("input")){
-		for(var inp in levels[currentLevel].input){
-			if(parseTree(levels[currentLevel].input[inp])){
+		for(var inp = 0; inp < 6; inp++){
+
+			var currentInput = levels[currentLevel].input();
+			generated.push(currentInput);
+
+			if(parseTree(currentInput)){
 				labels    = {};
 				variables = {};
 				steps = 0;
@@ -310,8 +337,19 @@ function parse(){
 	}
 
 	if(success){
-		document.getElementById("alert-title").innerText = "Program Output";
-		document.getElementById("alert-text").innerHTML = output.replace(/ /g,"&nbsp;");;
+		document.getElementById("alert-text").innerHTML = "none<br/><br/><u>Program Output</u><br/><br/>";
+
+		if(generated.length != 0){
+			var string = "";
+			for(var g in generated){
+				string += generated[g] + " ";
+			}
+
+			document.getElementById("alert-text").innerHTML = string + "<br/><br/><u>Program Output</u><br/><br/>";
+		}
+
+		document.getElementById("alert-title").innerText = "Program Input";
+		document.getElementById("alert-text").innerHTML += output.replace(/ /g,"&nbsp;");;
 
 		currentOutput = output;
 
