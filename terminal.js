@@ -5,7 +5,7 @@ var levels = [
 		text: "Write a program that prints \"Hello computer!\"<br /><br />To print, write <br />" +
 			"PRINT \"your message\"<br />on its own line.<br /><br />To run, hit \"submit\" below, " +
 			"or hit CTRL+ENTER in the text box.",
-		default: "//type code in this box\n//lines beginning with a double\n//slash will not be parsed\n\nPRINT \"Hello computer!\"\n",
+		default: "//type code in this box\n//lines beginning with a double\n//slash will not be parsed\n\nPRINT \"test\"\n",
 		solution: function(output){
 			if(output == "Hello computer!"){
 				return true;
@@ -53,7 +53,7 @@ var levels = [
 	{
 		title: "Added intrigue",
 		text: "Read each number from the input. Add one, then output it.<br /><br />Sample input:<br />0 1 2 3 4 5<br /><br />Expected output:<br />1 2 3 4 5 6" +
-			"Because there are six inputs to process, the same program will run six times.",
+			"<br />Because there are six inputs to process, the same program will run six times.",
 		default: "",
 		solution: function(output){
 			if(output == "1 2 3 4 5 6 "){
@@ -77,7 +77,7 @@ var levels = [
 	}
 ];
 
-var currentLevel = 3;
+var currentLevel = 0;
 var gameMode = 0;
 var currentOutput = "";
 var gameStarted = 0;
@@ -214,25 +214,44 @@ function parse(){
 			}
 		}
 
+		function throwError(reason){
+			document.getElementById("alert-title").innerText = "Error";
+			document.getElementById("alert-text").innerText = reason;
+			showAlert();
+		}
+
 		for(var i = 0; i < tree.length; i++){
 			if(steps < 100000){
 				if(tree[i][0].toUpperCase().slice(-1) == ":"){
 					labels[tree[i][0].toUpperCase().slice(0, -1)] = i;
 				}else if(tree[i][0].toUpperCase() == "PRINT"){
-					if(variables.hasOwnProperty(tree[i][1].toUpperCase())){
-						output += variables[tree[i][1].toUpperCase()];
-					}else{
-						output += tree[i][1];
+					if(tree[i].length > 1){
+						if(variables.hasOwnProperty(tree[i][1].toUpperCase())){
+							output += variables[tree[i][1].toUpperCase()];
+						}else{
+							output += tree[i][1];
+						}
+					} else {
+						throwError("Error in print statement - nothing to print!");
+						return false;
 					}
 				}else if(tree[i][0].toUpperCase() == "GOTO"){
-					if(labels.hasOwnProperty(tree[i][1].toUpperCase())){
-						i = labels[tree[i][1].toUpperCase()];
+					if(tree[i].length > 1){
+						if(labels.hasOwnProperty(tree[i][1].toUpperCase())){
+							i = labels[tree[i][1].toUpperCase()];
+						}
+					} else {
+						throwError("Error in goto statement - no label given!");
+						return false;
 					}
 				}else if(tree[i][0].toUpperCase() == "VAR"){
-					if(tree[i].length > 2){
+					if(tree[i].length > 3){
 						variables[tree[i][1].toUpperCase()] = toNum(3);
-					}else{
+					}else if(tree[i].length > 1){
 						variables[tree[i][1].toUpperCase()] = 0;
+					}else{
+						throwError("Error in variable declaration.");
+						return false;
 					}
 				}else if(tree[i][0].toUpperCase() == "ADD"){
 					variables[tree[i][1].toUpperCase()] += toNum(2);
@@ -265,28 +284,29 @@ function parse(){
 				}
 				steps++;
 			}else{
-				document.getElementById("alert-title").innerText = "Error";
-				document.getElementById("alert-text").innerText = "Uh oh! Something went wrong. Please inspect your code.";
-				showAlert();
-
-				success = false;
-
-				break;
+				throwError("Uh oh! Your code timed out. Maybe an infinite loop?");
+				return false;
 			}
 		}
+
+		return true;
 	}
 
 	if(levels[currentLevel].hasOwnProperty("input")){
 		for(var inp in levels[currentLevel].input){
-			parseTree(levels[currentLevel].input[inp]);
-			labels    = {};
-			variables = {};
-			steps = 0;
-			success = true;
-			ifLevel = 1;
+			if(parseTree(levels[currentLevel].input[inp])){
+				labels    = {};
+				variables = {};
+				steps = 0;
+				success = true;
+				ifLevel = 1;
+			} else {
+				success = false;
+				break;
+			}
 		}
 	}else{
-		parseTree(0);
+		success = parseTree(0);
 	}
 
 	if(success){
