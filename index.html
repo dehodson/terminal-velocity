@@ -160,6 +160,11 @@
 			font-size: 2vmin;
 			overflow-y: scroll;
 			visibility: hidden;
+			background-image: url("./coffeering.png");
+			background-size: 30vmin 30vmin;
+			background-position: 90% 40%;
+			background-repeat: no-repeat;
+			background-attachment: local;
 		}
 		#documentation h2, h3{
 			text-align: center;
@@ -213,6 +218,12 @@
 			<h4>GOTO</h4>
 			Jump to a previously defined label.<br/><br/>Usage:<br/>
 			LABEL:<br/>PRINT "infinite loop"<br/>GOTO LABEL<br/>
+			<h4>SAVE</h4>
+			Save a variable to long-term storage. Starts out at zero. The possible locations to save to are 0-9 and A-F.<br/><br/>Usage:<br/>
+			VAR number<br/>SAVE 0 number<br/>
+			<h4>LOAD</h4>
+			Load a variable from long-term storage. Starts out at zero. The possible locations to load from are 0-9 and A-F.<br/><br/>Usage:<br/>
+			VAR number<br/>LOAD D number<br/>
 		</div>
 		<div id="controls">
 			<a href="#" onclick="documentation();">documentation</a>

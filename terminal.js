@@ -109,7 +109,24 @@ function parse(){
 	var steps = 0;
 	var success = true;
 	var ifLevel = 1;
-	var storage = {};
+	var storage = {
+		"0": 0,
+		"1": 0,
+		"2": 0,
+		"3": 0,
+		"4": 0,
+		"5": 0,
+		"6": 0,
+		"7": 0,
+		"8": 0,
+		"9": 0,
+		"A": 0,
+		"B": 0,
+		"C": 0,
+		"D": 0,
+		"E": 0,
+		"F": 0,
+	};
 
 	generated = [];
 
@@ -208,14 +225,22 @@ function parse(){
 					variables[tree[i][1].toUpperCase()] = input;
 				}else if(tree[i][0].toUpperCase() == "SAVE"){
 					if(tree[i].length > 2){
-						variables[tree[i][1].toUpperCase()] = input;
+						if(storage.hasOwnProperty(tree[i][1].toUpperCase())){
+							if(variables.hasOwnProperty(tree[i][2].toUpperCase())){
+								storage[tree[i][1].toUpperCase()] = variables[tree[i][2].toUpperCase()];
+							}
+						}
 					} else {
 						throwError("Error in SAVE statement.");
 						return false;
 					}
 				}else if(tree[i][0].toUpperCase() == "LOAD"){
 					if(tree[i].length > 2){
-						variables[tree[i][1].toUpperCase()] = input;
+						if(storage.hasOwnProperty(tree[i][1].toUpperCase())){
+							if(variables.hasOwnProperty(tree[i][2].toUpperCase())){
+								variables[tree[i][2].toUpperCase()] = storage[tree[i][1].toUpperCase()];
+							}
+						}
 					} else {
 						throwError("Error in LOAD statement.");
 						return false;

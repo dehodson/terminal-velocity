@@ -236,5 +236,67 @@ var levels = [
 		input: function(){
 			return Math.floor(Math.random() * 15) + 5;
 		}
+	},
+	{
+		title: "Dim sum",
+		text: "The TinkerCo 3250 has an astounding sixteen locations of permanent memory that can be used to store data in between programs:<br />SAVE 0 VARIABLE<br /><br />For this problem, read each number from the input. Add them together, and print the running total.<br /><br />Sample input:<br />9 12 7 8 11 20<br /><br />Expected output:<br />9 21 28 36 47 67",
+		default: "//The memory locations to save to\n//are 0-9 and A-F. Check the\n//documentation for more info.\n\n\nLOAD 0 variable\n\n\nSAVE 0 variable",
+		solution: function(input, output){
+			var string = "";
+			var total = 0;
+			for(var i in input){
+				total += input[i];
+				string += total + " ";
+			}
+			if(output == string){
+				return true;
+			}
+			return false;
+		},
+		input: function(){
+			return Math.floor(Math.random() * 15) + 5;
+		}
+	},
+	{
+		title: "So high right now",
+		text: "For this problem, read all six numbers from the input. Print only the highest number out of those inputs.<br /><br />Sample input:<br />10 18 12 11 9 14<br /><br />Expected output:<br />18",
+		default: "",
+		solution: function(input, output){
+			var string = "";
+			var best = 0;
+			for(var i in input){
+				if(input[i] > best){
+					best = input[i];
+				}
+			}
+			string = best;
+			if(output == string + "" || output == string + " "){
+				return true;
+			}
+			return false;
+		},
+		input: function(){
+			return Math.floor(Math.random() * 15) + 5;
+		}
+	},
+	{
+		title: "Above average",
+		text: "For this problem, add all six inputs together and print their average. Don't worry about the remainder.<br /><br />Sample input:<br />5 1 2 3 4 3<br /><br />Expected output:<br />3",
+		default: "",
+		solution: function(input, output){
+			var string = "";
+			var total = 0;
+			for(var i in input){
+				total += input[i];
+			}
+			string = Math.floor(total / 6);
+			if(output == string + "" || output == string + " "){
+				return true;
+			}
+			return false;
+		},
+		input: function(){
+			return Math.floor(Math.random() * 15) + 5;
+		}
 	}
 ];
