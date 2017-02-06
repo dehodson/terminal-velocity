@@ -124,6 +124,16 @@
 		#controls:hover{
 			opacity: 1;
 		}
+		#links{
+			opacity: .5;
+			position: absolute;
+			bottom: .5vmin;
+			left: .5vmin;
+			font-size: 1.8vmin;
+		}
+		#links:hover{
+			opacity: 1;
+		}
 		#doc-overlay{
 			position: absolute;
 			width: 100%;
@@ -210,6 +220,9 @@
 			<a href="#" onclick="previous();">previous</a>
 			&#9632;
 			<a href="#" onclick="next();">next</a>
+		</div>
+		<div id="links">
+			<a href="https://github.com/dehodson/terminal-velocity"">github</a>
 		</div>
 	</body>
 	<script src="levels.js"></script>
