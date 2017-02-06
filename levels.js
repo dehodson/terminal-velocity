@@ -29,7 +29,7 @@ var levels = [
 		title: "Mathemagical",
 		text: "Add anything to the variable hello and print it.<br /><br />To add to a variable, use the ADD command:<br /><br />ADD NAME NUMBER" +
 			"<br /><br />For example:<br />ADD counter 10",
-		default: "//add something to this\n//and we'll call it a day.\n\nVAR hello = 5\n\nPRINT hello",
+		default: "//add something to this\n//and we'll call it a day.\n\nVAR hello = 5\n\n\n\nPRINT hello",
 		solution: function(input, output){
 			if(parseInt(output) > 5){
 				return true;
@@ -39,7 +39,7 @@ var levels = [
 	},
 	{
 		title: "I appreciate your input",
-		text: "A good program will need a way to input things. To read input into your program, use the READ command.<br /><br />Your program will" +
+		text: "A good program will need a way to input things. To read input into your program, use the READ command:<br />READ variable<br /><br />Your program will" +
 			" run over and over again for as long as there is input.<br /><br />In order to complete this exercise, read from the input and print it.",
 		default: "//declare a variable called\n//anything\n\n\nREAD anything\nPRINT anything\n\n//this line is so there's\n//spaces between the numbers\nPRINT \" \"",
 		solution: function(input, output){
@@ -59,7 +59,7 @@ var levels = [
 	{
 		title: "Added intrigue",
 		text: "Read each number from the input. Add one, then output it.<br /><br />Sample input:<br />0 1 2 3 4 5<br /><br />Expected output:<br />1 2 3 4 5 6" +
-			"<br />Because there are six inputs to process, the same program will run six times.",
+			"<br /><br />Because there are six inputs to process, the same program will run six times.",
 		default: "",
 		solution: function(input, output){
 			var string = "";
@@ -104,6 +104,28 @@ var levels = [
 					string += "false "
 				}else{
 					string += "true "
+				}
+			}
+			if(output == string){
+				return true;
+			}
+			return false;
+		},
+		input: function(){
+			return Math.floor(Math.random() * 20) - 10;
+		}
+	},
+	{
+		title: "Sub sandwich",
+		text: "The SUB command subtracts from a variable.<br />SUB variable 1<br /><br />For this problem, if the number in the input is positive, subtract 5 and print it. If it's negative, print it.<br /><br />Sample input:<br />1 7 -4 -3 0 2<br /><br />Expected output:<br />-4 2 -4 -3 0 -3",
+		default: "//The name of this command\n//was a mistake.\n//Through subconscious suggestion,\n//it caused us to spend more\n//money on sandwiches than R&D.\n",
+		solution: function(input, output){
+			var string = "";
+			for(var i in input){
+				if(input[i] < 1){
+					string += input[i] + " "
+				}else{
+					string += (parseInt(input[i]) - 5) + " ";
 				}
 			}
 			if(output == string){

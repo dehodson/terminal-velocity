@@ -109,6 +109,7 @@ function parse(){
 	var steps = 0;
 	var success = true;
 	var ifLevel = 1;
+	var storage = {};
 
 	generated = [];
 
@@ -205,6 +206,25 @@ function parse(){
 					}
 				}else if(tree[i][0].toUpperCase() == "READ"){
 					variables[tree[i][1].toUpperCase()] = input;
+				}else if(tree[i][0].toUpperCase() == "SAVE"){
+					if(tree[i].length > 2){
+						variables[tree[i][1].toUpperCase()] = input;
+					} else {
+						throwError("Error in SAVE statement.");
+						return false;
+					}
+				}else if(tree[i][0].toUpperCase() == "LOAD"){
+					if(tree[i].length > 2){
+						variables[tree[i][1].toUpperCase()] = input;
+					} else {
+						throwError("Error in LOAD statement.");
+						return false;
+					}
+				}else if(tree[i][0].toUpperCase() == "ENDIF"){
+					//nothing
+				}else if(tree[i][0]){
+					throwError("Unrecognized command "+tree[i][0]+".");
+					return false;
 				}
 				steps++;
 			}else{
