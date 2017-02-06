@@ -132,5 +132,24 @@ var levels = [
 		input: function(){
 			return Math.floor(Math.random() * 20) - 15;
 		}
+	},
+	{
+		title: "A little loopy",
+		text: "You can create loops using if statements and the GOTO command. Use it to jump back to a previously defined point in the code.<br /><br />For this problem, read a number from the input and print all the numbers from it to zero.<br /><br />Sample input:<br />7<br /><br />Expected output:<br />7 6 5 4 3 2 1 0",
+		default: "\n\nSTART:\n\n\n\nGOTO START",
+		solution: function(input, output){
+			var string = "";
+			for(var i in input){
+				string += Math.abs(parseInt(input[i])) + " ";
+			}
+			if(output == string){
+				return true;
+			}
+			return false;
+		},
+		input: function(){
+			return Math.floor(Math.random() * 5) + 5;
+		},
+		inputLength: 1
 	}
 ];

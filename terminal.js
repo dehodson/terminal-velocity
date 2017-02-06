@@ -216,8 +216,14 @@ function parse(){
 		return true;
 	}
 
+	var reps = 6;
+
+	if(levels[currentLevel].hasOwnProperty("inputLength")){
+		reps = levels[currentLevel].inputLength;
+	}
+
 	if(levels[currentLevel].hasOwnProperty("input")){
-		for(var inp = 0; inp < 6; inp++){
+		for(var inp = 0; inp < reps; inp++){
 
 			var currentInput = levels[currentLevel].input();
 			generated.push(currentInput);
@@ -268,7 +274,7 @@ function next(){
 
 function previous(){
 	if(currentLevel > 0){
-		currentLevel++;
+		currentLevel--;
 
 		document.getElementById("title").innerText = "Problem "+(currentLevel + 1)+": "+levels[currentLevel].title;
 		document.getElementById("text").innerHTML = levels[currentLevel].text;
