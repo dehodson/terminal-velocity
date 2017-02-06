@@ -265,11 +265,13 @@ function parse(){
 }
 
 function next(){
-	currentLevel++;
+	if(currentLevel < levels.length - 1){
+		currentLevel++;
 
-	document.getElementById("title").innerText = "Problem "+(currentLevel + 1)+": "+levels[currentLevel].title;
-	document.getElementById("text").innerHTML = levels[currentLevel].text;
-	document.getElementById("textbox").value = levels[currentLevel].default;
+		document.getElementById("title").innerText = "Problem "+(currentLevel + 1)+": "+levels[currentLevel].title;
+		document.getElementById("text").innerHTML = levels[currentLevel].text;
+		document.getElementById("textbox").value = levels[currentLevel].default;
+	}
 }
 
 function previous(){
