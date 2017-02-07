@@ -336,5 +336,60 @@ var levels = [
 		input: function(){
 			return Math.floor(Math.random() * 30) + 5;
 		}
+	},
+	{
+		title: "Completely rect",
+		text: "For this problem, read two groups of three numbers from the input. Treat those numbers as the dimensions of two different rectangular prisms. Output their two volumes.<br /><br />Sample input:<br />4 3 5 1 9 2<br /><br />Expected output:<br />60 18",
+		default: "",
+		solution: function(input, output){
+			var string = "";
+			var vol1 = 1;
+			var vol2 = 1;
+			for(var i = 0; i < 3; i++){
+				vol1 *= input[i];
+			}
+			for(var i = 3; i < 6; i++){
+				vol2 *= input[i];
+			}
+			string = vol1 + " " + vol2;
+			if(output == string + "" || output == string + " "){
+				return true;
+			}
+			return false;
+		},
+		input: function(){
+			return Math.floor(Math.random() * 19) + 1;
+		}
+	},
+	{
+		title: "Completely rect",
+		text: "For this problem, read two groups of three numbers from the input. Treat those numbers as the dimensions of two different rectangular prisms. Output their two volumes.<br /><br />Sample input:<br />4 3 5 1 9 2<br /><br />Expected output:<br />60 18",
+		default: "",
+		solution: function(input, output){
+			var string = "";
+			var vol1 = 1;
+			var vol2 = 1;
+			for(var i = 0; i < 3; i++){
+				vol1 *= input[i];
+			}
+			for(var i = 3; i < 6; i++){
+				vol2 *= input[i];
+			}
+			string = vol1 + " " + vol2;
+			if(output == string + "" || output == string + " "){
+				return true;
+			}
+			return false;
+		},
+		input: function(){
+
+			this.counter++;
+			if(this.counter >= 5){
+				this.counter = 1;
+			}
+
+			return Math.floor(Math.random() * this.counter * 7) + 1;
+		},
+		counter: 1
 	}
 ];

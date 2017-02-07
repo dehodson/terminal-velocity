@@ -225,7 +225,7 @@ function parse(){
 					if(tree[i].length > 2){
 						if(storage.hasOwnProperty(tree[i][1].toUpperCase())){
 							if(variables.hasOwnProperty(tree[i][2].toUpperCase())){
-								storage[tree[i][1].toUpperCase()] = variables[tree[i][2].toUpperCase()];
+								storage[tree[i][1].toUpperCase()] = toNum(2);
 							}
 						}
 					} else {
