@@ -258,6 +258,24 @@ var levels = [
 		}
 	},
 	{
+		title: "What's the difference?",
+		text: "For this problem, print the difference of the current number from the previous number.<br /><br />Sample input:<br />20 18 12 19 21 1<br /><br />Expected output:<br />20 -2 -6 7 3 -20",
+		default: "",
+		solution: function(input, output){
+			var string = input[0] + " ";
+			for(var i = 1; i < input.length; i++){
+				string += (parseInt(input[i]) - parseInt(input[i - 1])) + " "
+			}
+			if(output == string){
+				return true;
+			}
+			return false;
+		},
+		input: function(){
+			return Math.floor(Math.random() * 30);
+		}
+	},
+	{
 		title: "So high right now",
 		text: "For this problem, read all six numbers from the input. Print only the highest number out of those inputs.<br /><br />Sample input:<br />10 18 12 11 9 14<br /><br />Expected output:<br />18",
 		default: "",
@@ -280,8 +298,28 @@ var levels = [
 		}
 	},
 	{
+		title: "Two bad",
+		text: "We also weren't able to get a binary number converter into this version of our product. We would like to take this time to thank you for your brand loyalty.<br />For this problem, read each number from the input and print a 4 digit binary representation of it.<br /><br />Sample input:<br />0 12 15 3 9 7<br /><br />Expected output:<br />0000 1100 1111 0011 1001 0111",
+		default: "",
+		solution: function(input, output){
+			var string = "";
+			var news = "";
+			for(var i in input){
+				news = parseInt(input[i]).toString(2);
+				string += ('0000'+news).substring(news.length) + " ";
+			}
+			if(output == string){
+				return true;
+			}
+			return false;
+		},
+		input: function(){
+			return Math.floor(Math.random() * 16);
+		}
+	},
+	{
 		title: "Above average",
-		text: "For this problem, add all six inputs together and print their average. Don't worry about the remainder.<br /><br />Sample input:<br />5 1 2 3 4 3<br /><br />Expected output:<br />3",
+		text: "For this problem, add all six inputs together and print their average. Don't worry about the remainder.<br /><br />Sample input:<br />5 1 2 3 4 5<br /><br />Expected output:<br />3",
 		default: "",
 		solution: function(input, output){
 			var string = "";
@@ -296,7 +334,7 @@ var levels = [
 			return false;
 		},
 		input: function(){
-			return Math.floor(Math.random() * 15) + 5;
+			return Math.floor(Math.random() * 30) + 5;
 		}
 	}
 ];

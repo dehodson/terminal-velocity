@@ -101,8 +101,6 @@ function parse(){
 		}
 	}
 
-	console.log(tree);
-
 	var output = "";
 	var labels    = {};
 	var variables = {};
