@@ -7,6 +7,8 @@ var alertActive = true;
 var generated = [];
 var highestLevel = 0;
 
+var gameOver = false;
+
 function showAlert(){
 	document.getElementById("alert").style.visibility = "visible";
 	document.getElementById("overlay").style.visibility = "visible";
@@ -30,11 +32,28 @@ function closeAlert(){
 		}
 	}else{
 		if(gameStarted == 1){
-			currentLevel++;
+			if(currentLevel < levels.length - 1){
+				currentLevel++;
 
-			document.getElementById("title").innerText = "Problem "+(currentLevel + 1)+": "+levels[currentLevel].title;
-			document.getElementById("text").innerHTML = levels[currentLevel].text;
-			document.getElementById("textbox").value = levels[currentLevel].default;
+				if(currentLevel > highestLevel){
+					highestLevel = currentLevel;
+					localStorage.highestLevel = highestLevel;
+				}
+
+				links();
+
+				document.getElementById("title").innerText = "Problem "+(currentLevel + 1)+": "+levels[currentLevel].title;
+				document.getElementById("text").innerHTML = levels[currentLevel].text;
+				document.getElementById("textbox").value = levels[currentLevel].default;
+			} else {
+				if(!gameOver){
+					document.getElementById("alert-title").innerText = "100% Complete!";
+					document.getElementById("alert-text").innerHTML = "Wow, you completed every single programming problem!<br />You're an absolute rockstar dev!<br /><br />Maybe you should work for TinkerCo!";
+					showAlert();
+
+					gameOver = true;
+				}
+			}
 		}
 	}
 
@@ -49,6 +68,8 @@ if(localStorage.highestLevel){
 document.getElementById("title").innerText = "Problem "+(currentLevel + 1)+": "+levels[currentLevel].title;
 document.getElementById("text").innerHTML = levels[currentLevel].text;
 document.getElementById("textbox").value = levels[currentLevel].default;
+
+links();
 
 function parse(){
 
@@ -253,7 +274,7 @@ function parse(){
 						} else {
 							if(variables.hasOwnProperty(tree[i][1].toUpperCase())){
 								if(variables.hasOwnProperty(tree[i][2].toUpperCase())){
-									variables[tree[i][2].toUpperCase()] = storage[variables[tree[i][1]].toString(16).toUpperCase()];
+									variables[tree[i][2].toUpperCase()] = storage[variables[tree[i][1].toString(16).toUpperCase()]];
 								}
 							}
 						}
@@ -325,9 +346,23 @@ function parse(){
 	}
 }
 
+function links(){
+	document.getElementById("next").style.textDecoration = "underline";
+	document.getElementById("prev").style.textDecoration = "underline";
+
+	if(currentLevel == levels.length - 1 || currentLevel == highestLevel){
+		document.getElementById("next").style.textDecoration = "underline line-through";
+	}
+	if(currentLevel == 0){
+		document.getElementById("prev").style.textDecoration = "underline line-through";
+	}
+}
+
 function next(){
-	if(currentLevel < levels.length - 1){
+	if(currentLevel < levels.length - 1 && currentLevel < highestLevel){
 		currentLevel++;
+
+		links();
 
 		document.getElementById("title").innerText = "Problem "+(currentLevel + 1)+": "+levels[currentLevel].title;
 		document.getElementById("text").innerHTML = levels[currentLevel].text;
@@ -338,6 +373,8 @@ function next(){
 function previous(){
 	if(currentLevel > 0){
 		currentLevel--;
+
+		links();
 
 		document.getElementById("title").innerText = "Problem "+(currentLevel + 1)+": "+levels[currentLevel].title;
 		document.getElementById("text").innerHTML = levels[currentLevel].text;
