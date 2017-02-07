@@ -362,21 +362,16 @@ var levels = [
 		}
 	},
 	{
-		title: "Completely rect",
-		text: "For this problem, read two groups of three numbers from the input. Treat those numbers as the dimensions of two different rectangular prisms. Output their two volumes.<br /><br />Sample input:<br />4 3 5 1 9 2<br /><br />Expected output:<br />60 18",
+		title: "A finale of sorts",
+		text: "For this problem, read six numbers from the input. Print them sorted in ascending order.<br />One last thing: You can save and load from addresses using variables.<br /><br />VAR address = 0<br />SAVE address variable<br /><br />Sample input:<br />12 15 2 1 14 5<br /><br />Expected output:<br />1 2 5 12 14 15",
 		default: "",
 		solution: function(input, output){
 			var string = "";
-			var vol1 = 1;
-			var vol2 = 1;
-			for(var i = 0; i < 3; i++){
-				vol1 *= input[i];
+			input = input.sort(function(a,b) { return a-b; });
+			for(var i in input){
+				string += input[i] + " ";
 			}
-			for(var i = 3; i < 6; i++){
-				vol2 *= input[i];
-			}
-			string = vol1 + " " + vol2;
-			if(output == string + "" || output == string + " "){
+			if(output == string){
 				return true;
 			}
 			return false;

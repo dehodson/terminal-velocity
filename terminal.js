@@ -5,6 +5,7 @@ var currentOutput = "";
 var gameStarted = 0;
 var alertActive = true;
 var generated = [];
+var highestLevel = 0;
 
 function showAlert(){
 	document.getElementById("alert").style.visibility = "visible";
@@ -38,6 +39,11 @@ function closeAlert(){
 	}
 
 	gameStarted = 1;
+}
+
+if(localStorage.highestLevel){
+	highestLevel = parseInt(localStorage.highestLevel);
+	currentLevel = highestLevel;
 }
 
 document.getElementById("title").innerText = "Problem "+(currentLevel + 1)+": "+levels[currentLevel].title;
@@ -227,6 +233,12 @@ function parse(){
 							if(variables.hasOwnProperty(tree[i][2].toUpperCase())){
 								storage[tree[i][1].toUpperCase()] = toNum(2);
 							}
+						} else {
+							if(variables.hasOwnProperty(tree[i][1].toUpperCase())){
+								if(variables.hasOwnProperty(tree[i][2].toUpperCase())){
+									storage[variables[tree[i][1].toUpperCase()].toString(16).toUpperCase()] = toNum(2);
+								}
+							}
 						}
 					} else {
 						throwError("Error in SAVE statement.");
@@ -237,6 +249,12 @@ function parse(){
 						if(storage.hasOwnProperty(tree[i][1].toUpperCase())){
 							if(variables.hasOwnProperty(tree[i][2].toUpperCase())){
 								variables[tree[i][2].toUpperCase()] = storage[tree[i][1].toUpperCase()];
+							}
+						} else {
+							if(variables.hasOwnProperty(tree[i][1].toUpperCase())){
+								if(variables.hasOwnProperty(tree[i][2].toUpperCase())){
+									variables[tree[i][2].toUpperCase()] = storage[variables[tree[i][1]].toString(16).toUpperCase()];
+								}
 							}
 						}
 					} else {
